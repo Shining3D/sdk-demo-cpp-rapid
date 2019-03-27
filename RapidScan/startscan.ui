@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>startScan</class>
+ <widget class="QDialog" name="startScan">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>341</width>
+     <height>251</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_enableHDR">
+        <property name="text">
+         <string>Enable HDR</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_enableHDR">
+        <item>
+         <property name="text">
+          <string>ture</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>fasle</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="label_turnableTimes">
+        <property name="text">
+         <string>Turnable times</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="lineEdit_turnableTimes">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QLabel" name="label_subScanType">
+        <property name="text">
+         <string>Subscan type</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_subScanType">
+        <item>
+         <property name="text">
+          <string>SST_FIXED_FREE</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>SST_FIXED_TURNABLE</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QLabel" name="label_alignType">
+        <property name="text">
+         <string>Align type</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="comboBox_alignType">
+        <item>
+         <property name="text">
+          <string>AT_FEATURES</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>AT_MARKERS</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>AT_HYBRID</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>AT_AUTO</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>AT_TURTABLE</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>AT_CODE_POINT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>AT_GLOBAL_POINT</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>270</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>OK</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
