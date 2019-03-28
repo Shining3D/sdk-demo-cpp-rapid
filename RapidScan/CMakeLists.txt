@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 cmake_policy(VERSION 3.4)
-project(RapidScan-Demo VERSION 0.1.0)
+project(sdk-demo-cpp-rapid VERSION 0.1.0)
  
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -12,7 +12,7 @@ set (CMAKE_PREFIX_PATH $ENV{QTDIR595_64})
 
 find_package(Qt5 COMPONENTS Core Gui Widgets LinguistTools REQUIRED)
 
-set(TARGET_NAME RapidScan-Demo)
+set(TARGET_NAME sdk-demo-cpp-rapid)
 
 set(UIS
 	mainwindow.ui
