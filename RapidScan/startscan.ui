@@ -36,7 +36,7 @@
        <widget class="QComboBox" name="comboBox_enableHDR">
         <item>
          <property name="text">
-          <string>ture</string>
+          <string>true</string>
          </property>
         </item>
         <item>
