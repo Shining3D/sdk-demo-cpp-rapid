@@ -32,7 +32,7 @@ private slots:
 private:
     Ui::startScan *ui;
 	QString m_action;
-	bool typeBool(QString type);//Get boolean values corresponding to characters.
+	
 	
 };
 

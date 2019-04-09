@@ -40,24 +40,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QCheckBox" name="checkBox_globaloptimize">
         <property name="text">
          <string>Global optimize</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_globalOptimize">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>false</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -65,24 +51,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QCheckBox" name="checkBox__rebuildData">
         <property name="text">
          <string>Rebuild data</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_3">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>false</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>

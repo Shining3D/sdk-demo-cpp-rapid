@@ -67,24 +67,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_7">
       <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QCheckBox" name="checkBox_p3">
         <property name="text">
          <string>P3</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_p3">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>fasle</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -92,24 +78,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QCheckBox" name="checkBox__Asc">
         <property name="text">
          <string>Asc</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_asc">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>fasle</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -117,24 +89,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_6">
       <item>
-       <widget class="QLabel" name="label_6">
+       <widget class="QCheckBox" name="checkBox_Sasc">
         <property name="text">
          <string>Sasc</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_sasc">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>fasle</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -142,24 +100,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QCheckBox" name="checkBox_Stl">
         <property name="text">
          <string>Stl</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_stl">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>fasle</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -167,24 +111,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QCheckBox" name="checkBox_Obj">
         <property name="text">
          <string>Obj</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_obj">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>false</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -192,24 +122,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QCheckBox" name="checkBox_Ply">
         <property name="text">
          <string>Ply</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_ply">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>fasle</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>
@@ -217,24 +133,10 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_5">
       <item>
-       <widget class="QLabel" name="label_5">
+       <widget class="QCheckBox" name="checkBox__3mf">
         <property name="text">
          <string>3mf</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="comboBox_5">
-        <item>
-         <property name="text">
-          <string>true</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>fasle</string>
-         </property>
-        </item>
        </widget>
       </item>
      </layout>

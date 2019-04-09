@@ -1,11 +1,10 @@
 #ifndef SAVE_H
 #define SAVE_H
-
-#include <QDialog>
-#include <QByteArray>
 /*
 An interface corresponding to a "Save" button
 */
+#include <QDialog>
+#include <QByteArray>
 namespace Ui {
 class save;
 }
@@ -24,7 +23,7 @@ private slots:
 	void on_pushButton_Path_clicked();
 private:
     Ui::save *ui;
-	bool typeBool(QString type);//Get boolean values corresponding to characters.
+	
 };
 
 #endif // SAVE_H

@@ -18,13 +18,13 @@ startScan::~startScan()
 
 void startScan::on_pushButton_clicked()
 {
-	QString enableHDR = ui->comboBox_enableHDR->currentText();
+	bool enableHDR = ui->checkBox->isChecked();
 	QString alignType = ui->comboBox_alignType->currentText();
 	QString subScanType = ui->comboBox_subScanType->currentText();
 	QString turntableTimes = ui->lineEdit_turnableTimes->text();
 
 	QJsonObject paramsJsonObject;
-	paramsJsonObject.insert("enableHDR", typeBool(enableHDR));
+	paramsJsonObject.insert("enableHDR", enableHDR);
 	paramsJsonObject.insert("alignType", alignType);
 	paramsJsonObject.insert("subScanType", subScanType);
 	paramsJsonObject.insert("turntableTimes", turntableTimes.toInt());
@@ -41,18 +41,6 @@ void startScan::on_pushButton_clicked()
 	this->hide();
 }
 
-bool startScan::typeBool(QString type)
-{
-
-	if (type == "true")
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 
 void startScan::setAction(QString action)
 {

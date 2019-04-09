@@ -24,7 +24,7 @@ private slots:
 
 private:
     Ui::endScan *ui;
-	bool typeBool(QString type);//Get boolean values corresponding to characters.
+	
 };
 
 #endif // ENDSCAN_H

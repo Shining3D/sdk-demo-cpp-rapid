@@ -17,30 +17,18 @@ endScan::~endScan()
 
 void endScan::on_pushButton_endScan_clicked()
 {
-	QString globalOptimize = ui->comboBox_globalOptimize->currentText();
+	bool globalOptimize = ui->checkBox_globaloptimize->isChecked();
 	QString pointDist = ui->lineEdit_globalDist->text();
-	QString rebuildData = ui->comboBox_3->currentText();
+	bool rebuildData = ui->checkBox__rebuildData->isChecked();
 
 	QJsonObject jsonobject;
-	jsonobject.insert("globalOptimize", typeBool(globalOptimize));
+	jsonobject.insert("globalOptimize", globalOptimize);
 	jsonobject.insert("pointDist", pointDist.toDouble());
-	jsonobject.insert("rebuildData", typeBool(rebuildData));
+	jsonobject.insert("rebuildData", rebuildData);
 	QJsonDocument document;
 	document.setObject(jsonobject);
 	QByteArray result = document.toJson();
 
 	emit endScanSignal(result);
 	this->hide();
-}
-
-bool endScan::typeBool(QString type)
-{
-	if (type == "true")
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
