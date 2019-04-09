@@ -542,17 +542,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	MainWindow::closeEvent(event);
 }
 
-bool MainWindow::typeBool(QString type)
-{
-	if (type=="true")
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
 void MainWindow::on_pushButton_ScanOpenProject_clicked()
 {
 	QString str = QFileDialog::getOpenFileName(this, QStringLiteral("select a file"));
@@ -752,6 +741,23 @@ void MainWindow::onPublishReceived(QString majorCmd, QString minorCmd, QByteArra
 				memcpy(&valBool, data.constData(), data.size());
 				ui->checkBox_trackLost->setChecked(valBool);
 			}
+			if (minorCmd == QStringLiteral("disconnect")) {
+				QMessageBox msgBox;
+				msgBox.setText(QStringLiteral("The platform is disconnect from scan service!!!"));
+				msgBox.setInformativeText(QStringLiteral("Do you want to terminate operating this program ?"));
+				msgBox.setStandardButtons(QMessageBox::Discard | QMessageBox::Ok);
+				msgBox.setDefaultButton(QMessageBox::Ok);
+				int ret = msgBox.exec();
+				switch (ret) {
+				case QMessageBox::Ok: {
+					execTerminate();
+					break;
+				}
+				case QMessageBox::Discard:
+				default:
+					break;
+				}
+			}
 	}
 }
 
@@ -765,6 +771,16 @@ void MainWindow::onVideoImageReady(int camID, QPixmap pixmap)
 		ui->label_Cam1->setScaledContents(true);
 		ui->label_Cam1->setPixmap(pixmap);
 	}
+}
+
+void MainWindow::execTerminate()
+{
+	delete ui;
+	zmq_close(m_zmqReqSocket);
+	zmq_ctx_destroy(m_zmqContext);
+	this->close();
+	QApplication::exit();
+
 }
 
 bool MainWindow::sendData(void* socket, const QString& cmd, const QByteArray& data)
