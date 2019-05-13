@@ -82,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_save=new save;
 	m_startScan=new startScan;
 	m_simplify = new Simplify;
+	m_bSimplify = false;
 
 	connect(m_startScan, &startScan::startScanSignal, this, &MainWindow::onStartScan);
 	connect(m_endScan, &endScan::endScanSignal, this, &MainWindow::onEndScan);
@@ -91,6 +92,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(m_save, &save::saveSignal, this, &MainWindow::onSave);
 	connect(m_simplify, &Simplify::simplifySignal, this, &MainWindow::onSimplify);
 	ui->widget->setEnabled(false);
+	ui->lineEdit_OpenProject->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -172,7 +174,8 @@ void MainWindow::on_pushButton_UnregisterProcesser_clicked()
 
 void MainWindow::ScanTriangleCount()
 {
-	const char *sendData = "v1.0/scan/triangleCount";
+	//const char *sendData = "v1.0/scan/triangleCount";
+	const char *sendData = "v1.0/scan/pointFaceCount";
 	int nbytes = zmq_send(m_zmqReqSocket, sendData, strlen(sendData), 0);
 	char buf[MAX_DATA_LENGTH + 1] = { 0 };
 	nbytes = zmq_recv(m_zmqReqSocket, buf, MAX_DATA_LENGTH, 0);
@@ -225,6 +228,19 @@ void MainWindow::ScanMarkerCount()
 	assert(!hasMore(m_zmqReqSocket));
 }
 
+void MainWindow::ScanMeshPointCount()
+{
+	const char *sendData = "v1.0/scan/meshPointCount";
+	int nbytes = zmq_send(m_zmqReqSocket, sendData, strlen(sendData), 0);
+	char buf[MAX_DATA_LENGTH + 1] = { 0 };
+	nbytes = zmq_recv(m_zmqReqSocket, buf, MAX_DATA_LENGTH, 0);
+	int num;
+	memcpy(&num, buf, sizeof(int));
+	qDebug() << "scan meshPointCount:" << num;
+	ui->label_pointCountR->setText(QString::number(num));
+	assert(!hasMore(m_zmqReqSocket));
+}
+
 void MainWindow::on_pushButton_Refresh_clicked()
 {
 	 ScanStatus();
@@ -236,6 +252,12 @@ void MainWindow::on_pushButton_Refresh_clicked()
 	 ScanFramerate();
 	 ScanPointCount();
 	 ScanMarkerCount();
+	 if (m_bSimplify == true) {
+		 ScanMeshPointCount();
+	 }
+	 else {
+		 ScanPointCount();
+	 }
 }
 
 
@@ -329,6 +351,7 @@ void MainWindow::on_pushButton_scanSave_clicked()
 
 void MainWindow::on_pushButton_scanSimplify_clicked()
 {
+	m_bSimplify = true;
 	m_simplify->show();
 }
 
@@ -706,12 +729,16 @@ void MainWindow::onPublishReceived(QString majorCmd, QString minorCmd, QByteArra
 				memcpy(&num, data.constData(), data.size());
 				ui->label_markerCountR->setText(QString::number(num));
 			}
-			if (minorCmd == QStringLiteral("triangleCount")) {
+// 			if (minorCmd == QStringLiteral("triangleCount")) {
+// 				int num = 0;
+// 				memcpy(&num, data.constData(), data.size());
+// 				ui->label_triangleCountR->setText(QString::number(num));
+// 			}
+			if (minorCmd == QStringLiteral("pointFaceCount")) {
 				int num = 0;
 				memcpy(&num, data.constData(), data.size());
 				ui->label_triangleCountR->setText(QString::number(num));
 			}
-
 
 
 			
@@ -758,6 +785,18 @@ void MainWindow::onPublishReceived(QString majorCmd, QString minorCmd, QByteArra
 					break;
 				}
 			}
+
+	}
+	else if (majorCmd == QStringLiteral("device")) {
+		if (minorCmd == QStringLiteral("firmwareUpgradable")) {
+			//检测到可以进行固件升级
+			QMessageBox msgBox;
+			msgBox.setText(QStringLiteral("Update firmware!!!"));
+			msgBox.setInformativeText(QStringLiteral("Do you want to update this firmware ?"));
+			msgBox.setStandardButtons(QMessageBox::Discard | QMessageBox::Ok);
+			msgBox.setDefaultButton(QMessageBox::Ok);
+			int ret = msgBox.exec();
+		}
 	}
 }
 
