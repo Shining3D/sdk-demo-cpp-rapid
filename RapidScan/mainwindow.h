@@ -67,6 +67,7 @@ private slots:
 	void ScanFramerate();
 	void ScanPointCount();
 	void ScanMarkerCount();
+	void ScanMeshPointCount();
 	void on_pushButton_Refresh_clicked();
 	void on_pushButton_ScanLastSimplifyParams_clicked();
 
@@ -146,6 +147,7 @@ private:
 	save *m_save;
 	startScan *m_startScan;
 	Simplify *m_simplify;
+	bool m_bSimplify;
 
 public slots://Response signal to  call SDK interface  
 	void onNewProject(QByteArray);

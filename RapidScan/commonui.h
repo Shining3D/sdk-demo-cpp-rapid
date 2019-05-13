@@ -37,14 +37,14 @@ public:
 	QCheckBox * m_fastSaveR;
 	QPushButton *m_button_OK;
 	QPushButton *m_button_path;
-	
-	public slots:
+
+public slots:
 	void onPushButtonClicked();
 	void onPathButtonClicked();
-signals:
+ signals:
 	void newProject(QByteArray);//The mainwindow receive this signal,the parameter is json data
 
-
+	
 };
 
 
