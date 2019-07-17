@@ -20,7 +20,7 @@ public:
 signals:
 	void endScanSignal(QByteArray);//The mainwindow receive this signal contains data
 private slots:
-    void on_pushButton_endScan_clicked();
+    void on_pushButton_endScanOk_clicked();
 
 private:
     Ui::endScan *ui;

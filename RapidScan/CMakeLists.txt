@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4)
 cmake_policy(VERSION 3.4)
-project(sdk-demo-cpp-rapid VERSION 0.1.0)
+project(RapidScan-Demo VERSION 0.1.0)
  
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -8,11 +8,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
-set (CMAKE_PREFIX_PATH $ENV{QTDIR597_64})
+set (CMAKE_PREFIX_PATH $ENV{QTDIR595_64})
 
 find_package(Qt5 COMPONENTS Core Gui Widgets LinguistTools REQUIRED)
 
-set(TARGET_NAME sdk-demo-cpp-rapid)
+set(TARGET_NAME RapidScan-Demo)
 
 set(UIS
 	mainwindow.ui
@@ -23,6 +23,10 @@ set(UIS
 	endscan.ui
 	cancelscan.ui
 	simplify.ui
+	zoomdlg.ui
+	fillhole.ui
+	sharpdlg.ui
+	smooth_sharp_zoom.ui
 )
 
 set(HEADERS 
@@ -37,6 +41,11 @@ set(HEADERS
 	endscan.h
 	cancelscan.h
 	simplify.h
+	reporterror.h
+	zoomdlg.h
+	fillhole.h
+	sharpdlg.h
+	smooth_sharp_zoom.h
 )
 
 set(SOURCES 
@@ -52,6 +61,11 @@ set(SOURCES
 	endscan.cpp
 	cancelscan.cpp
 	simplify.cpp
+	reporterror.cpp
+	zoomdlg.cpp
+	fillhole.cpp
+	sharpdlg.cpp
+	smooth_sharp_zoom.cpp
 )
 
 include_directories(${ZeroMQ_INCLUDE_DIR})
