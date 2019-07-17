@@ -8,6 +8,7 @@ mesh::mesh(QWidget *parent) :
     ui(new Ui::mesh)
 {
     ui->setupUi(this);
+	this->setWindowTitle("Mesh");
 }
 
 mesh::~mesh()

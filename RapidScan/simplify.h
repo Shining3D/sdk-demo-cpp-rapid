@@ -16,7 +16,7 @@ public:
 	~Simplify();
 
 signals:
-	void simplifySignal(QByteArray);//The mainwindow receive this signal
+	void simplifySignal(QByteArray);
 private slots:
 	void on_pushButton_clicked();
 

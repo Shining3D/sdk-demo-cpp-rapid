@@ -10,12 +10,18 @@ DataProcesser::DataProcesser(MainWindow *mainWindow, void *context, QObject *par
 
 }
 
-void DataProcesser::setup(int port)//12000
+void DataProcesser::setup(int port)//12000    在invokeMeathod方法里有用的
 {
-	m_socket = zmq_socket(m_context, ZMQ_REP);
+	//note: you should call "zmq_close" again when you want to rebuild zmq connection. 
+	if (m_socket != nullptr){
+		zmq_close(m_socket);
+	}
+	//.end
+
+	m_socket = zmq_socket(m_context, ZMQ_REP);//创建套接字
 
 	auto bindAddrBytes = QString("tcp://*:%1").arg(port).toLocal8Bit();
-	int rc = zmq_bind(m_socket, bindAddrBytes);
+	int rc = zmq_bind(m_socket, bindAddrBytes);//套接字与终结点绑定
 	qDebug() << "rc" << rc << endl;
 	qDebug() << "bindAddrBytes" << bindAddrBytes << endl;
 	assert(!rc);
@@ -43,7 +49,7 @@ void DataProcesser::setup(int port)//12000
 		auto jsonDoc = QJsonDocument::fromJson(data);
 		if (jsonDoc.isNull()){
 			qWarning() << "Invalid data processing json message!";
-			continue;
+			break;//use break instead of continue 
 		}
 		auto jsonObj = jsonDoc.object();
 		//qInfo() << "data process:" << jsonObj;
@@ -64,8 +70,8 @@ void DataProcesser::processData(QJsonObject jsonObj)
 	auto props = jsonObj["props"].toObject();
 	auto offset = jsonObj["offset"].toInt();
 
-	QSharedMemory shm;
-	shm.setNativeKey(key);
+	QSharedMemory shm;//一段共享内存
+	shm.setNativeKey(key);//多进程或线程使用同一共享内存时  key值必须相同
 	shm.attach(QSharedMemory::ReadWrite);
 	auto data = static_cast<unsigned char*>(shm.data()) + offset;
 
@@ -89,6 +95,155 @@ void DataProcesser::processData(QJsonObject jsonObj)
 	}
 	else if (type == QStringLiteral("MT_POINT_CLOUD")) {
 		emit sharedMemoryMsg(type, msg);
+
+#if DEBUG_POINTCLOUD
+		//增加全局点云数据显示
+		//note: 共享内存数据不上所有数据类型是char（有些是float），所以需要根据memtype进行对应转换
+		//auto data = static_cast<unsigned char*>(shm.data()) + offset;
+		void *p = shm.data();
+		if (nullptr == p){
+			qCritical() << "share memory Pointer is null\n";
+			return;
+		}
+
+		//note: not consider texture
+		auto data = static_cast<unsigned char*>(shm.data()) + offset;
+
+		//for test float data
+		float *p_data = (float*)data;
+		QFile file_scan(m_strApp + "/scanService.txt");
+		if (!file_scan.open(QFile::WriteOnly | QFile::Text))
+		{
+			return;
+		}
+
+		QString tst_strPointData = "";
+		for (int i = 0; i < 1000;)
+		{
+			tst_strPointData = QString::number((float)p_data[i], 'f') + "  " + QString::number((float)p_data[i + 1], 'f')
+				+ "  " + QString::number(p_data[i + 2], 'f') + "  " //postion data x y z
+				+ QString::number((float)p_data[i + 3], 'f') + "  " + QString::number((float)p_data[i + 4], 'f')
+				+ "  " + QString::number((float)p_data[i + 5], 'f') + "\n";
+
+			file_scan.write(tst_strPointData.toLocal8Bit());
+			//file.write(strNormalData.toLocal8Bit());
+			i += 6;
+		}
+
+		file_scan.close();
+		//.end
+
+		if (m_bFirstPoint)
+		{
+			m_bFirstPoint = false;
+			m_nFirstPointCount = pointcount;
+			//first whole point byte size
+			int data_len = pointcount * sizeof(float) * 6;
+
+			memcpy(m_pPointCloud, data, data_len);
+			float *p_PointClod = (float*)m_pPointCloud;
+			//write init data to file
+			//QString strApp = qApp->applicationDirPath();
+			QFile file(m_strApp + "/origin.asc");
+			if (!file.open(QFile::WriteOnly | QFile::Text))
+			{
+				return;
+			}
+			//if (file.open(QIODevice::WriteOnly))
+			{
+				QString strPointData = "";
+				QString strNormalData = "";
+				for (int i = 0; i < pointcount * 6;)
+				{
+					// 					strPointData = "point-x: " + QString::number(m_pPointCloud[i]) + " point-y: " + QString::number(m_pPointCloud[i + 1])
+					// 						+ " point-z: " + QString::number(m_pPointCloud[i + 2]) + "\n";
+					// 
+					// 					strNormalData = "normal-x: " + QString::number(m_pPointCloud[i + 3]) + " normal-y: " + QString::number(m_pPointCloud[i + 4])
+					// 						+ " normal-z: " + QString::number(m_pPointCloud[i + 5]) + "\n";
+
+					//write file in .asc format
+					strPointData = QString::number((float)p_PointClod[i], 'f') + "  " + QString::number((float)p_PointClod[i + 1], 'f')
+						+ "  " + QString::number((float)p_PointClod[i + 2], 'f') + "  " //postion data x y z
+						+ QString::number((float)p_PointClod[i + 3], 'f') + "  " + QString::number((float)p_PointClod[i + 4], 'f')
+						+ "  " + QString::number((float)p_PointClod[i + 5], 'f') + "\n";
+
+					file.write(strPointData.toLocal8Bit());
+					//file.write(strNormalData.toLocal8Bit());
+					i += 6;
+				}
+
+				file.close();
+			}
+		}
+		else{
+			//update one frame data for test to prove that the whole point cloud is different from current point cloud
+			float *p_PointClod = (float*)m_pPointCloud;
+			if (incremental && !m_bFistUpdate)
+			{
+				m_bFistUpdate = true;
+
+				qDebug() << "point cloud update by id" << endl;
+				//update use transmit pointcount
+				for (int i = 0; i < pointcount * 6;)
+				{
+					//get id
+					int id = data[i + 6];
+
+					if (id >= strlen(m_pPointCloud)) { qDebug() << "point cloud id is error" << endl; break; }
+
+					//update position
+					m_pPointCloud[id] = data[i];
+					m_pPointCloud[id + 1] = data[i + 1];
+					m_pPointCloud[id + 2] = data[i + 2];
+					//update normal
+					m_pPointCloud[id + 3] = data[i + 3];
+					m_pPointCloud[id + 4] = data[i + 4];
+					m_pPointCloud[id + 5] = data[i + 5];
+
+					i += 6;
+				}
+
+				//write update data to file
+				//QString strApp = qApp->applicationDirPath();
+				QFile file(m_strApp + "/update.asc");
+				if (!file.open(QFile::WriteOnly | QFile::Text))
+				{
+					return;
+				}
+
+				//if (file.open(QIODevice::WriteOnly))
+				{
+					QString strPointData = "";
+					QString strNormalData = "";
+					//show by using the global pointcount
+					for (int i = 0; i < m_nFirstPointCount * 6;)
+					{
+						// 						strPointData = "point-x: " + QString::number(m_pPointCloud[i]) + " point-y: " + QString::number(m_pPointCloud[i + 1])
+						// 							+ " point-z: " + QString::number(m_pPointCloud[i + 2]) + "\n";
+						// 
+						// 						strNormalData = "normal-x: " + QString::number(m_pPointCloud[i + 3]) + " normal-y: " + QString::number(m_pPointCloud[i + 4])
+						// 							+ " normal-z: " + QString::number(m_pPointCloud[i + 5])+ "\n";
+
+						//write file in .asc format
+						strPointData = QString::number((float)p_PointClod[i], 'f') + "  " + QString::number((float)p_PointClod[i + 1], 'f')
+							+ "  " + QString::number((float)p_PointClod[i + 2], 'f') + "  " //postion data x y z
+							+ QString::number((float)p_PointClod[i + 3], 'f') + "  " + QString::number((float)p_PointClod[i + 4], 'f')
+							+ "  " + QString::number((float)p_PointClod[i + 5], 'f') + "\n";
+
+						file.write(strPointData.toLocal8Bit());
+						//file.write(strNormalData.toLocal8Bit());
+						i += 6;
+					}
+
+					file.close();
+				}
+			}
+			else{
+				//新增的点云数据
+			}
+		}
+#endif
+
 	}
 	else if (type == QStringLiteral("MY_DELETE_POINTS")) {
 		emit sharedMemoryMsg(type, msg);

@@ -5,6 +5,7 @@ An interface corresponding to a "Save" button
 */
 #include <QDialog>
 #include <QByteArray>
+#include<QLineEdit>
 namespace Ui {
 class save;
 }

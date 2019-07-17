@@ -6,6 +6,7 @@ An interface corresponding to a "cancel" button
 #include <QDialog>
 #include <QByteArray>
 #include <QVector>
+
 namespace Ui {
 class cancelScan;
 }
@@ -17,6 +18,8 @@ class cancelScan : public QDialog
 public:
     explicit cancelScan(QWidget *parent = nullptr);
     ~cancelScan();
+
+	void setProjectName(QString name);
 signals:
 	void cancelScanSignal(QByteArray);//The mainwindow receive this signal contains data 
 private slots:
@@ -24,6 +27,8 @@ private slots:
 
 private:
     Ui::cancelScan *ui;
+	QString m_projectFilePath;
+	//MainWindow *mainWindow = nullptr;
 };
 
 #endif // CANCELSCAN_H
