@@ -4,12 +4,100 @@
 #include <QtDebug>
 #include <QSharedMemory>
 #include <QMessageBox>
+TransMemory shareMemory("meshData1");
+
 DataProcesser::DataProcesser(MainWindow *mainWindow, void *context, QObject *parent)
 	: QObject(parent), m_mainWindow(mainWindow), m_context(context)
 {
 
 }
 
+void DataProcesser::handleMeshData(QString key)
+{
+	if (!shareMemory().isAttached()){
+		if (!shareMemory().attach(QSharedMemory::ReadWrite)){
+			return;
+		}
+	}
+
+	shareMemory().lock();
+	MemoryMessage* sharedMes;
+	do 
+	{
+		sharedMes = shareMemory.readMessageData();
+
+		switch (sharedMes->type)
+		{
+		case MemoryMessage::PointerVertex:
+		{
+			qDebug() << "handle PointerVertex data";
+			handlePointVertex(sharedMes, shareMemory);
+		}break;
+		case MemoryMessage::PointerNormal:
+		{
+			qDebug() << "handle PointerNormal data";
+		}break;
+		case MemoryMessage::faceID:
+		{
+			qDebug() << "handle faceID data";
+		}break;
+		case  MemoryMessage::texture:
+		{
+			qDebug() << "handle texture data";
+			handleTexture(sharedMes, shareMemory);
+		}break;
+		case MemoryMessage::textureID:
+		{
+			qDebug() << "handle textureID data";
+		}break;
+		case MemoryMessage::textureUV:
+		{
+			qDebug() << "handle textureUV data";
+		}break;
+
+		default:
+			break;
+		}
+	} while (sharedMes->haveNext);
+
+	shareMemory.clearMemoryPos();
+	shareMemory().unlock();
+}
+
+void DataProcesser::handlePointVertex(MemoryMessage *pMes, TransMemory &memory)
+{
+	//get the initial data address;
+	float *data = (float*)((char*)memory().data() + pMes->begin);
+	//get the data count
+	int count = (pMes->end - pMes->begin)/(sizeof(float));
+	//to do what you want
+
+}
+
+void DataProcesser::handleTexture(MemoryMessage *pMes, TransMemory &memory)
+{
+	static int pos; // record texture data offset
+	uchar *pTextureImage = nullptr; //save texture data
+	int textureWidth = pMes->variable;
+	int textureHeight = pMes->size;
+	if (nullptr == pTextureImage){
+		pTextureImage = new uchar[textureHeight * textureWidth * sizeof(uchar) * 3];
+	}
+
+	//get the data count
+	int count = (pMes->end - pMes->begin) / (sizeof(uchar));
+	//get the initial data address;
+	float *data = (float*)((char*)memory().data() + pMes->begin);
+	memcpy(pTextureImage + pos, data, count);
+	pos += count;
+	
+	//judge whether texture data is transported completely.
+	if (textureWidth * textureHeight * 3){
+		//construct your texture image
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
 void DataProcesser::setup(int port)//12000    在invokeMeathod方法里有用的
 {
 	//note: you should call "zmq_close" again when you want to rebuild zmq connection. 
@@ -253,6 +341,8 @@ void DataProcesser::processData(QJsonObject jsonObj)
 	}
 	else if (type == QStringLiteral("MY_TRI_MESH")) {
 		emit sharedMemoryMsg(type, msg);
+		//note: show example to how to parse mesh data lwj 2019.7.18
+		handleMeshData("meshData1");
 	}
 	else if (type == QStringLiteral("MT_RANGE_DATA")) {
 		emit sharedMemoryMsg(type, msg);
