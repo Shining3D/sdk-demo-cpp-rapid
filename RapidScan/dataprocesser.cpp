@@ -339,10 +339,10 @@ void DataProcesser::processData(QJsonObject jsonObj)
 	else if (type == QStringLiteral("MT_MARKERS")) {
 		emit sharedMemoryMsg(type, msg);
 	}
-	else if (type == QStringLiteral("MY_TRI_MESH")) {
+	else if (type == QStringLiteral("MT_TRI_MESH")) {
 		emit sharedMemoryMsg(type, msg);
 		//note: show example to how to parse mesh data lwj 2019.7.18
-		handleMeshData("meshData1");
+		//handleMeshData("meshData1");
 	}
 	else if (type == QStringLiteral("MT_RANGE_DATA")) {
 		emit sharedMemoryMsg(type, msg);

@@ -48,6 +48,7 @@ private:
 	*/
 	QPixmap createPixmap(unsigned char* data, int width, int height, int channel, int rotate);
 
+	//sdk3.2 mesh data parse
 	//note: show example to how to parse mesh data lwj 2019.7.18
 	void handleMeshData(QString key);
 
