@@ -175,6 +175,7 @@ void pointCloudHandle::savePointToFile(QString filename, int pointcount, QString
 			+ QString::number((float)pPointCloud[i + 3], 'f') + "  " + QString::number((float)pPointCloud[i + 4], 'f')
 			+ "  " + QString::number((float)pPointCloud[i + 5], 'f') + "\n";
 
+		qDebug() << " tst_strPointData: " << tst_strPointData;
 		file_scan.write(tst_strPointData.toLocal8Bit());
 		i += 6;
 	}
@@ -191,6 +192,7 @@ void DataProcesser::processData(QJsonObject jsonObj)
 	auto offset = jsonObj["offset"].toInt();
 
 	auto pointcount = jsonObj["pointCount"].toInt();
+	qDebug() << " pointcount: " << pointcount;
 
 	QSharedMemory shm;//一段共享内存
 	shm.setNativeKey(key);//多进程或线程使用同一共享内存时  key值必须相同
@@ -227,7 +229,7 @@ void DataProcesser::processData(QJsonObject jsonObj)
 			return;
 		}
 
-		auto data = static_cast<unsigned char*>(shm.data()) + offset;
+		//auto data = static_cast<unsigned char*>(shm.data()) + offset;
 		QString path = qApp->applicationDirPath() + "/" + QString::number(num).append(QStringLiteral("_pointcloud.txt"));
 		m_vecThread.push_back(new std::thread(std::bind(&pointCloudHandle::savePointToFile, &m_pointObj, 
 			path, pointcount, key, offset)));
