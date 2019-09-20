@@ -221,7 +221,7 @@ void DataProcesser::processData(QJsonObject jsonObj)
 		emit sharedMemoryMsg(type, msg);
 
 		//TODO: 需求定制，将每帧数据写入文件;
-		static int num = 0; num++;
+		static int num = 0; ++num;
 
 		void *p = shm.data();
 		if(p == nullptr){
