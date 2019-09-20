@@ -46,6 +46,7 @@ set(HEADERS
 	fillhole.h
 	sharpdlg.h
 	smooth_sharp_zoom.h
+	transmemory.h
 )
 
 set(SOURCES 
@@ -66,6 +67,7 @@ set(SOURCES
 	fillhole.cpp
 	sharpdlg.cpp
 	smooth_sharp_zoom.cpp
+	transmemory.cpp
 )
 
 include_directories(${ZeroMQ_INCLUDE_DIR})

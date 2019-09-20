@@ -4,6 +4,7 @@
 #include <QtDebug>
 #include <QSharedMemory>
 #include <QMessageBox>
+#include <QCoreApplication>
 TransMemory shareMemory("meshData1");
 
 DataProcesser::DataProcesser(MainWindow *mainWindow, void *context, QObject *parent)
@@ -150,6 +151,37 @@ void DataProcesser::setup(int port)//12000    在invokeMeathod方法里有用的
 	}
 }
 
+void pointCloudHandle::savePointToFile(QString filename, int pointcount, QString memKey, int offset)
+{
+	QMutexLocker mutex(&m_mutex);
+
+	QSharedMemory shm;//一段共享内存
+	shm.setNativeKey(memKey);//多进程或线程使用同一共享内存时  key值必须相同
+	shm.attach(QSharedMemory::ReadWrite);
+	auto data = static_cast<unsigned char*>(shm.data()) + offset;
+
+	const float *pPointCloud = (const float*)data;
+	QFile file_scan(filename);
+	if (!file_scan.open(QFile::WriteOnly | QFile::Text))
+	{
+		return;
+	}
+
+	QString tst_strPointData = "";
+	for (int i = 0; i < pointcount * 6;)
+	{
+		tst_strPointData = QString::number((float)pPointCloud[i], 'f') + "  " + QString::number((float)pPointCloud[i + 1], 'f')
+			+ "  " + QString::number(pPointCloud[i + 2], 'f') + "  " //postion data x y z
+			+ QString::number((float)pPointCloud[i + 3], 'f') + "  " + QString::number((float)pPointCloud[i + 4], 'f')
+			+ "  " + QString::number((float)pPointCloud[i + 5], 'f') + "\n";
+
+		file_scan.write(tst_strPointData.toLocal8Bit());
+		i += 6;
+	}
+
+	file_scan.close();
+}
+
 void DataProcesser::processData(QJsonObject jsonObj)
 {
 	auto type = jsonObj["type"].toString();
@@ -157,6 +189,8 @@ void DataProcesser::processData(QJsonObject jsonObj)
 	auto name = jsonObj["name"].toString();
 	auto props = jsonObj["props"].toObject();
 	auto offset = jsonObj["offset"].toInt();
+
+	auto pointcount = jsonObj["pointCount"].toInt();
 
 	QSharedMemory shm;//一段共享内存
 	shm.setNativeKey(key);//多进程或线程使用同一共享内存时  key值必须相同
@@ -183,6 +217,20 @@ void DataProcesser::processData(QJsonObject jsonObj)
 	}
 	else if (type == QStringLiteral("MT_POINT_CLOUD")) {
 		emit sharedMemoryMsg(type, msg);
+
+		//TODO: 需求定制，将每帧数据写入文件;
+		static int num = 0; num++;
+
+		void *p = shm.data();
+		if(p == nullptr){
+			qWarning() << "shared memory is null";
+			return;
+		}
+
+		auto data = static_cast<unsigned char*>(shm.data()) + offset;
+		QString path = qApp->applicationDirPath() + "/" + QString::number(num).append(QStringLiteral("_pointcloud.txt"));
+		m_vecThread.push_back(new std::thread(std::bind(&pointCloudHandle::savePointToFile, &m_pointObj, 
+			path, pointcount, key, offset)));
 
 #if DEBUG_POINTCLOUD
 		//增加全局点云数据显示

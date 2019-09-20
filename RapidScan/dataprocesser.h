@@ -9,6 +9,28 @@
 #include <QPixmap>
 #include <QByteArray>
 #include "transmemory.h"
+#include <QMutex>
+
+#include <thread>
+#include <memory>
+
+class pointCloudHandle : public QObject
+{
+	Q_OBJECT
+		friend class DataProcesser;
+public:
+	pointCloudHandle(){}
+	~pointCloudHandle()
+	{
+
+	}
+
+public slots:
+void savePointToFile(QString filename, int pointcount, QString memKey, int offset);
+
+private:
+	QMutex m_mutex;
+};
 
 /*
 Get data from shared memory
@@ -61,6 +83,10 @@ private:
     void* m_socket = nullptr;
 	void* m_reqSocket = nullptr;
     MainWindow* m_mainWindow = nullptr;
+
+	//TODO:需求定制2019.9.20
+	std::vector<std::thread*> m_vecThread;
+	pointCloudHandle m_pointObj;
 };
 
 #endif // DATA_PROCESSER_H
