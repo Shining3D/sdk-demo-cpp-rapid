@@ -191,7 +191,7 @@ void DataProcesser::processData(QJsonObject jsonObj)
 	auto props = jsonObj["props"].toObject();
 	auto offset = jsonObj["offset"].toInt();
 
-	auto pointcount = jsonObj["pointCount"].toInt();
+	auto pointcount = props["pointCount"].toInt();
 	qDebug() << " pointcount: " << pointcount;
 
 	QSharedMemory shm;//Ò»¶Î¹²ÏíÄÚ´æ
