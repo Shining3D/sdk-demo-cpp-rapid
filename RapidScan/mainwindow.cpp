@@ -632,6 +632,9 @@ void MainWindow::on_pushButton_NewProject_clicked()
 	ui->lineEdit_PointDistance->setText("1");
 	QString strpointDist = ui->lineEdit_PointDistance->text();
 	QString stralignType = ui->comboBox__AlignType->currentText();
+
+	ui->checkBox_IncreseFrameRate->setChecked(true);
+	ui->checkBox_SaveFrameImage->setChecked(true);
 	bool strrapidMode = ui->checkBox_IncreseFrameRate->isChecked();
 	bool strfastSave = ui->checkBox_SaveFrameImage->isChecked();
 	QJsonObject jsonobject;

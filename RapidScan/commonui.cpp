@@ -22,6 +22,9 @@ NewProject::NewProject(QDialog *parent /*= nullptr*/):QDialog(parent)
 	m_fastSaveR->setCheckable(true);
 	m_fastSaveR->setText("Fast save");
 
+	m_rapidModeR->setChecked(true);
+	m_fastSaveR->setChecked(true);
+
 	m_alignTypeR->addItem("AT_FEATURES");
 	m_alignTypeR->addItem("AT_MARKERS");
 	m_alignTypeR->addItem("AT_HYBRID");
